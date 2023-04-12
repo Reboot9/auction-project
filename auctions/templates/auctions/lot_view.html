@@ -1,0 +1,78 @@
+{% extends "auctions/layout.html" %}
+{% block title %}
+{{ lot.name }}
+{% endblock %}
+
+{% block body %}
+<style>
+p    {font-size: 18px;}
+
+</style>
+<div class="container">
+    {% include "auctions/modal_dialogues.html" %}
+    <h2>Lot {{ lot.name }}</h2>
+    <p class="text-muted">By {{lot.creator }}</p>
+    {% for category in lot.category.all %}
+    <a class="btn btn-info btn-sm" role="button" href="{% url 'category_view' category.id %}">{{ category }}</a>
+    {% endfor %}
+    <hr>
+    <div style="float: right; margin-left: 10px; max-width: calc(100% - 300px);">
+        <img class="img-thumbnail" src="{{ lot.image.url }}" width="300px" style="clear: right;">
+        {% if request.user == lot.creator and lot.is_active %}
+        <button class="btn btn-danger btn-block my-3" data-toggle="modal"
+                data-target="#closeLotModal-{{ lot.id }}" style="display: block;">
+            Close lot
+        </button>
+        {% endif %}
+        {% if user.is_authenticated %}
+            <div class="custom-control custom-switch my-3">
+                <input type="checkbox" class="custom-control-input" id="watchlistSwitch"
+                       {% if added_to_watchlist %}checked{% endif %}
+                onclick="location.href='{% url 'toggle_watchlist' lot.id %}'">
+                <label class="custom-control-label" for="watchlistSwitch">
+                   Add to Watchlist
+                </label>
+            </div>
+        {% endif %}
+    </div>
+
+    {% if lot.description is defined %}
+        <p>{{ lot.description }}</p>
+    {% else %}
+        <p class="text-muted">Author didn't provide any description</p>
+    {% endif %}
+    <br>
+    <p>Current bid: {{ lot.lot_bid }} $</p>
+    <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#makeBidModal"
+            {% if not lot.is_active or not request.user.is_authenticated %}disabled{% endif %}>
+        Make bid
+    </button>
+
+<!--    Comment section-->
+    {% if lot.is_active %}
+    <form method="post">
+        {% csrf_token %}
+
+        {{ comment_form }}
+        <br>
+        <button type="submit" class="btn btn-primary" name="leave_comment" value="leave_comment">
+            Add Comment
+        </button>
+    </form>
+    <br>
+    {% endif %}
+
+    {% for comment in comments %}
+        <div class="card">
+            <div class="card-header">
+                {{ comment.author }}
+            </div>
+            <div class="card-body">
+                {{ comment.comment }}
+            </div>
+        </div>
+    <br>
+    {% endfor %}
+
+</div>
+{% endblock %}

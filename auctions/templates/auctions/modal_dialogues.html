@@ -1,0 +1,52 @@
+<!--Modal for making bid-->
+    <div class="modal fade" id="makeBidModal" tabindex="-1" role="dialog" aria-labelledby="makeBidModal"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="BidModalLabel">Make Bid</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post">
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        {{ bid_form }}
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success" name="make_bid" value="make_bid">Confirm Bid</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<!--Modal for closing lot-->
+    <div class="modal fade" id="closeLotModal-{{ lot.id }}" tabindex="-1" role="dialog" aria-labelledby="closeLotModal"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="closeLotLabel">Close Lot</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post">
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        <p>Are you sure you want to close this lot for <strong>{{ lot.lot_bid }}$</strong>?</p>
+                        <!--{{ close_lot_form }}-->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-success" name="close_lot" value="Close Lot"/>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
